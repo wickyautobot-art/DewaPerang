@@ -219,6 +219,23 @@ class MoltyAPI:
         """GET /version — check current server version."""
         return await self._request("GET", "/version")
 
+    # ── Update Version ───────────────────────────────────────────────────────
+
+async def update_version(self):
+    """Ambil versi terbaru dari server dan perbarui SKILL_VERSION."""
+    await self._ensure_client()
+    try:
+        resp = await self._client.get("/version")
+        data = resp.json()
+        version = data.get("version")
+        if version:
+            import bot.config as config
+            config.SKILL_VERSION = version
+            self._client.headers["X-Version"] = version
+            log.info("SKILL_VERSION berhasil diperbarui ke %s", version)
+    except Exception as e:
+        log.warning("Gagal auto-update versi: %s", e)
+        
     # ── Cleanup ───────────────────────────────────────────────────────
 
     async def close(self):
