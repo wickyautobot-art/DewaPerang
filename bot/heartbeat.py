@@ -32,6 +32,7 @@ class Heartbeat:
 
     def __init__(self):
         self.api: MoltyAPI | None = None
+        await self.api.update_version()
         self.memory = AgentMemory()
         self.running = True
         self._agent_key = "agent-1"  # Consistent dashboard key
@@ -70,6 +71,7 @@ class Heartbeat:
             return
 
         self.api = MoltyAPI(creds.get("api_key", "") or get_api_key())
+        await self.api.update_version()
 
         # Feed dashboard
         dashboard_state.bots_running = 1
@@ -102,6 +104,7 @@ class Heartbeat:
 
         if self.api:
             await self.api.close()
+            await self.api.update_version()
         log.info("Agent stopped.")
 
     async def _heartbeat_cycle(self):
