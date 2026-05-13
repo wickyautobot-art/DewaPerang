@@ -32,7 +32,6 @@ class Heartbeat:
 
     def __init__(self):
         self.api: MoltyAPI | None = None
-        await self.api.update_version()
         self.memory = AgentMemory()
         self.running = True
         self._agent_key = "agent-1"  # Consistent dashboard key
